@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img"
+     aria-label="Photo placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#efe8dc"/>
+      <stop offset="1" stop-color="#e0d5c4"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.68" cy="0.34" r="0.32">
+      <stop offset="0" stop-color="#d9a892" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#d9a892" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#sun)"/>
+  <circle cx="1090" cy="340" r="120" fill="#c98f77" opacity="0.55"/>
+
+  <path d="M0 700 C 260 640 420 720 700 690 C 980 660 1240 720 1600 660 L1600 1000 L0 1000 Z"
+        fill="#cdbfa9" opacity="0.85"/>
+  <path d="M0 800 C 300 760 560 830 880 795 C 1180 762 1380 820 1600 790 L1600 1000 L0 1000 Z"
+        fill="#b9a992" opacity="0.9"/>
+
+  <g fill="none" stroke="#8d7f6b" stroke-width="3" opacity="0.5">
+    <path d="M40 40 h120 M40 40 v120 M1560 960 h-120 M1560 960 v-120"/>
+  </g>
+
+  <text x="800" y="965" text-anchor="middle" fill="#7a6d5b" opacity="0.7"
+        font-family="ui-monospace, monospace" font-size="26" letter-spacing="6">
+    PHOTO PLACEHOLDER
+  </text>
+</svg>

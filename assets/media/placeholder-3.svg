@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img"
+     aria-label="Video placeholder">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22201f"/>
+      <stop offset="0.55" stop-color="#171514"/>
+      <stop offset="1" stop-color="#0f0e0e"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="0.28" cy="0.3" r="0.4">
+      <stop offset="0" stop-color="#e2a07f" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#e2a07f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#night)"/>
+  <rect width="1600" height="900" fill="url(#lamp)"/>
+
+  <!-- skyline -->
+  <g fill="#0b0a0a" opacity="0.9">
+    <rect x="60" y="520" width="180" height="380"/>
+    <rect x="270" y="600" width="120" height="300"/>
+    <rect x="420" y="480" width="210" height="420"/>
+    <rect x="660" y="580" width="150" height="320"/>
+    <rect x="840" y="520" width="240" height="380"/>
+    <rect x="1110" y="620" width="140" height="280"/>
+    <rect x="1280" y="540" width="260" height="360"/>
+  </g>
+
+  <!-- windows -->
+  <g fill="#d9a882" opacity="0.55">
+    <rect x="100" y="560" width="22" height="30"/>
+    <rect x="150" y="620" width="22" height="30"/>
+    <rect x="470" y="520" width="22" height="30"/>
+    <rect x="540" y="590" width="22" height="30"/>
+    <rect x="890" y="560" width="22" height="30"/>
+    <rect x="980" y="640" width="22" height="30"/>
+    <rect x="1330" y="580" width="22" height="30"/>
+    <rect x="1420" y="660" width="22" height="30"/>
+  </g>
+
+  <!-- play mark -->
+  <g opacity="0.9">
+    <circle cx="800" cy="400" r="74" fill="none" stroke="#efe6da" stroke-width="3"/>
+    <path d="M778 370 L832 400 L778 430 Z" fill="#efe6da"/>
+  </g>
+
+  <text x="800" y="852" text-anchor="middle" fill="#8d8176" opacity="0.85"
+        font-family="ui-monospace, monospace" font-size="24" letter-spacing="6">
+    VIDEO PLACEHOLDER
+  </text>
+</svg>

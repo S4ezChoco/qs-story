@@ -1,0 +1,400 @@
+/* ============================================================
+   base.css — shell, top bar, shared controls, animation utilities
+   ============================================================ */
+
+/* — decorative paper grain ————————————————————— */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  transition: opacity var(--t-mid) var(--ease);
+}
+
+[data-theme="dark"] .grain {
+  mix-blend-mode: screen;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--s3);
+  left: 50%;
+  z-index: 200;
+  padding: var(--s2) var(--s4);
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.82rem;
+  transform: translate(-50%, -160%);
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+}
+
+/* — locked state: freeze the page behind the gate —————— */
+body.is-locked {
+  overflow: hidden;
+}
+
+/* ============================================================
+   app frame
+   ============================================================ */
+
+.app {
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  opacity: 0;
+}
+
+.app.is-in {
+  animation: app-in var(--t-slow) var(--ease-out) forwards;
+}
+
+@keyframes app-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.994);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: clamp(var(--s5), 5vw, var(--s7));
+}
+
+/* ============================================================
+   top bar
+   ============================================================ */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  transition: background-color var(--t-mid) var(--ease),
+    border-color var(--t-mid) var(--ease);
+}
+
+.topbar.is-stuck {
+  border-bottom-color: var(--line);
+  background: var(--scrim);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+}
+
+.topbar__inner {
+  display: flex;
+  width: 100%;
+  max-width: var(--shell);
+  align-items: center;
+  gap: var(--s4);
+  margin-inline: auto;
+  padding: var(--s4) clamp(var(--s5), 5vw, var(--s7));
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s3);
+  flex: none;
+}
+
+.brand__mark {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  transition: border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), transform var(--t-mid) var(--ease-out);
+}
+
+.brand:hover .brand__mark {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: rotate(-8deg);
+}
+
+.brand__name {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.brand__dash,
+.gate__dash {
+  opacity: 0.35;
+  margin-inline: 0.06em;
+}
+
+.topbar__now {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-mute);
+  font-size: 0.8rem;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--t-mid) var(--ease),
+    transform var(--t-mid) var(--ease);
+}
+
+.topbar__now.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.topbar__actions {
+  display: flex;
+  margin-left: auto;
+  gap: var(--s1);
+}
+
+.iconbtn {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.5rem;
+  place-items: center;
+  border-radius: var(--r-full);
+  color: var(--ink-soft);
+  transition: background-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease);
+}
+
+.iconbtn:hover {
+  background: var(--bg-tint);
+  color: var(--ink);
+}
+
+.iconbtn:active {
+  transform: scale(0.94);
+}
+
+/* theme icon: sun ⇄ moon morph */
+.icon-theme .moon {
+  opacity: 0;
+  transform-origin: center;
+  transform: rotate(-90deg) scale(0.6);
+  transition: opacity var(--t-mid) var(--ease),
+    transform var(--t-mid) var(--ease-out);
+}
+
+.icon-theme .sun-core,
+.icon-theme .sun-rays {
+  transform-origin: center;
+  transition: opacity var(--t-mid) var(--ease),
+    transform var(--t-mid) var(--ease-out);
+}
+
+[data-theme="dark"] .icon-theme .sun-core,
+[data-theme="dark"] .icon-theme .sun-rays {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.6);
+}
+
+[data-theme="dark"] .icon-theme .moon {
+  opacity: 1;
+  transform: none;
+}
+
+/* — reading progress hairline ————————————————— */
+.topbar__progress {
+  height: 2px;
+  background: var(--line);
+}
+
+.topbar__progressbar {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left;
+}
+
+/* ============================================================
+   footer
+   ============================================================ */
+
+.foot {
+  display: flex;
+  width: 100%;
+  max-width: var(--shell);
+  flex-wrap: wrap;
+  gap: var(--s3);
+  justify-content: space-between;
+  margin: var(--s8) auto 0;
+  padding: var(--s5) clamp(var(--s5), 5vw, var(--s7)) var(--s6);
+  border-top: 1px solid var(--line);
+  color: var(--ink-mute);
+  font-size: 0.76rem;
+}
+
+.foot__left {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   shared type
+   ============================================================ */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.eyebrow::after {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  content: "";
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+/* ============================================================
+   buttons
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 0.62rem 1.1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  font-size: 0.86rem;
+  transition: border-color var(--t-fast) var(--ease),
+    background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.btn svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.btn:hover {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--ghost {
+  border-color: transparent;
+  padding-inline: 0.4rem;
+  color: var(--ink-mute);
+}
+
+.btn--ghost:hover {
+  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+}
+
+/* — chips: media badges ————————————————————— */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  padding: 0.14rem 0.5rem 0.14rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chip svg {
+  width: 0.72rem;
+  height: 0.72rem;
+  flex: none;
+}
+
+/* ============================================================
+   animation utilities
+   ============================================================ */
+
+/* Elements marked [data-rise] fade up when they enter the viewport. */
+[data-rise] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+[data-rise].is-in {
+  animation: rise var(--t-slow) var(--ease-out) forwards;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* View swap on route change. */
+.view {
+  flex: 1;
+}
+
+.view.is-leaving {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-rise] {
+    opacity: 1;
+    transform: none;
+  }
+  .app {
+    opacity: 1;
+  }
+}

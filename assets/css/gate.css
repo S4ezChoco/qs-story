@@ -1,0 +1,319 @@
+/* ============================================================
+   gate.css — the passphrase screen
+   ============================================================ */
+
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s6);
+  padding: var(--s6) var(--s5);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* soft off-centre glow so the screen isn't a flat rectangle */
+.gate::before {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: min(120vw, 1000px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--accent-soft) 0%,
+    transparent 62%
+  );
+  content: "";
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: breathe 14s var(--ease) infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+
+.gate__inner {
+  position: relative;
+  width: 100%;
+  max-width: 27rem;
+  margin-top: auto;
+}
+
+.gate__mark {
+  margin-bottom: var(--s6);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  animation: fade-in var(--t-slow) var(--ease-out) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gate__line {
+  margin-bottom: var(--s7);
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 7.5vw, 2.9rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+/* each line slides up from behind a mask */
+.reveal-line {
+  display: block;
+  overflow: hidden;
+}
+
+.reveal-line > span {
+  display: block;
+  transform: translateY(105%);
+  animation: line-up 900ms var(--ease-out) forwards;
+}
+
+.reveal-line:nth-child(1) > span {
+  animation-delay: 120ms;
+}
+
+.reveal-line:nth-child(2) > span {
+  animation-delay: 220ms;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+
+@keyframes line-up {
+  to {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   field
+   ============================================================ */
+
+.gate__form {
+  animation: fade-in var(--t-slow) var(--ease-out) 420ms both;
+}
+
+.field__label {
+  display: block;
+  margin-bottom: var(--s3);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.field__row {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--line-strong);
+  transition: border-color var(--t-mid) var(--ease);
+}
+
+.field__row:focus-within {
+  border-bottom-color: var(--ink);
+}
+
+.field__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  outline: none;
+}
+
+.field__input::placeholder {
+  color: var(--ink-mute);
+}
+
+.field__reveal {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.42rem;
+  place-items: center;
+  border-radius: var(--r-full);
+  color: var(--ink-mute);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.field__reveal:hover {
+  color: var(--ink);
+}
+
+.field__reveal .eye-shut {
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease);
+}
+
+.field__reveal[aria-pressed="true"] .eye-shut {
+  opacity: 1;
+}
+
+.field__submit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.82rem;
+  transition: opacity var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.field__submit svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  transition: transform var(--t-mid) var(--ease-out);
+}
+
+.field__submit:hover svg {
+  transform: translateX(3px);
+}
+
+.field__submit:active {
+  transform: scale(0.97);
+}
+
+.field__submit[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.field__hint {
+  min-height: 1.2rem;
+  margin-top: var(--s3);
+  color: var(--ink-mute);
+  font-size: 0.8rem;
+}
+
+.field__hint.is-error {
+  color: var(--accent);
+}
+
+.field__hint.is-ok {
+  color: var(--ink-soft);
+}
+
+/* — wrong passphrase ————————————————————————— */
+.gate.is-wrong .field__row {
+  animation: shake 420ms var(--ease);
+  border-bottom-color: var(--accent);
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  18% {
+    transform: translateX(-7px);
+  }
+  38% {
+    transform: translateX(6px);
+  }
+  58% {
+    transform: translateX(-4px);
+  }
+  78% {
+    transform: translateX(2px);
+  }
+}
+
+/* — unlocking ————————————————————————————————— */
+.gate.is-open {
+  animation: gate-out 640ms var(--ease-out) forwards;
+  pointer-events: none;
+}
+
+@keyframes gate-out {
+  to {
+    opacity: 0;
+    transform: translateY(-14px) scale(1.015);
+    filter: blur(6px);
+    visibility: hidden;
+  }
+}
+
+.gate__foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-top: auto;
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  animation: fade-in var(--t-slow) var(--ease-out) 700ms both;
+}
+
+.gate__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2.6s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+@media (min-width: 48rem) {
+  .gate {
+    padding: var(--s7);
+  }
+  .gate__inner {
+    margin-top: 0;
+  }
+  .gate__foot {
+    position: absolute;
+    bottom: var(--s6);
+    left: 50%;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+}

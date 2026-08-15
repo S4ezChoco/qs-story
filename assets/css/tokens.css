@@ -1,0 +1,191 @@
+/* ============================================================
+   tokens.css — design tokens, themes, reset
+   The only file that defines colours. Everything else uses vars.
+   ============================================================ */
+
+:root {
+  /* — type ————————————————————————————————— */
+  --font-serif: "Iowan Old Style", Georgia, "Palatino Linotype", ui-serif, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text",
+    "Segoe UI", Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", SFMono-Regular,
+    Menlo, monospace;
+
+  /* — space (4px base) ——————————————————————— */
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1rem;
+  --s5: 1.5rem;
+  --s6: 2rem;
+  --s7: 3rem;
+  --s8: 4.5rem;
+  --s9: 7rem;
+
+  /* — shape ———————————————————————————————— */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-full: 999px;
+
+  /* — measure —————————————————————————————— */
+  --measure: 34rem;      /* prose column */
+  --shell: 70rem;        /* page shell   */
+
+  /* — motion ——————————————————————————————— */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 140ms;
+  --t-mid: 260ms;
+  --t-slow: 620ms;
+}
+
+/* — light (default) ————————————————————————— */
+:root,
+[data-theme="light"] {
+  --bg: #faf9f7;
+  --bg-tint: #f3f0ea;
+  --elev: #ffffff;
+  --ink: #1b1a17;
+  --ink-soft: #4a473f;
+  --ink-mute: #7d7970;
+  --line: rgba(27, 26, 23, 0.11);
+  --line-strong: rgba(27, 26, 23, 0.22);
+  --accent: #a4453a;
+  --accent-soft: rgba(164, 69, 58, 0.1);
+  --shadow-sm: 0 1px 2px rgba(27, 26, 23, 0.05);
+  --shadow-md: 0 12px 32px -12px rgba(27, 26, 23, 0.18);
+  --shadow-lg: 0 40px 80px -32px rgba(27, 26, 23, 0.32);
+  --grain: 0.032;
+  --scrim: rgba(250, 249, 247, 0.72);
+}
+
+/* — dark ———————————————————————————————————— */
+[data-theme="dark"] {
+  --bg: #100f11;
+  --bg-tint: #191819;
+  --elev: #17161a;
+  --ink: #eeeae3;
+  --ink-soft: #bdb8b0;
+  --ink-mute: #8d8880;
+  --line: rgba(238, 234, 227, 0.13);
+  --line-strong: rgba(238, 234, 227, 0.26);
+  --accent: #e28f80;
+  --accent-soft: rgba(226, 143, 128, 0.14);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 40px 80px -32px rgba(0, 0, 0, 0.8);
+  --grain: 0.05;
+  --scrim: rgba(16, 15, 17, 0.74);
+}
+
+/* ============================================================
+   reset
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+  transition: background-color var(--t-mid) var(--ease),
+    color var(--t-mid) var(--ease);
+}
+
+/* The hidden attribute has to win over any display: flex/grid below. */
+[hidden] {
+  display: none !important;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+/* SVG icons: stroked, never filled. Keeps the icon set consistent. */
+svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  width: 100%;
+  height: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* ============================================================
+   reduced motion — honour the OS setting
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

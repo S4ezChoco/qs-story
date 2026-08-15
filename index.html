@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>qs-story</title>
+<meta name="description" content="A private collection of stories.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf9f7" id="metaThemeColor">
+<link rel="icon" href="assets/media/favicon.svg" type="image/svg+xml">
+
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/gate.css">
+<link rel="stylesheet" href="assets/css/library.css">
+<link rel="stylesheet" href="assets/css/reader.css">
+
+<!-- Apply the saved theme before first paint so dark mode never flashes white. -->
+<script>
+  (function () {
+    try {
+      var saved = JSON.parse(localStorage.getItem("qs.theme"));
+      if (saved === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.getElementById("metaThemeColor").setAttribute("content", "#100f11");
+      }
+    } catch (e) {}
+  })();
+</script>
+</head>
+
+<body class="is-locked">
+<!-- Paper grain overlay. Purely decorative. -->
+<div class="grain" aria-hidden="true"></div>
+
+<a class="skip-link" href="#view">Skip to content</a>
+
+<!-- ══════════════════════════════════════════════════════════
+     1. GATE — the password screen
+     ══════════════════════════════════════════════════════════ -->
+<section class="gate" id="gate" aria-labelledby="gateTitle">
+  <div class="gate__inner">
+    <p class="gate__mark" id="gateTitle">qs<span class="gate__dash">&mdash;</span>story</p>
+
+    <h1 class="gate__line">
+      <span class="reveal-line"><span>On Development,</span></span>
+      <span class="reveal-line"><span>wait lang lods.</span></span>
+    </h1>
+
+    <form class="gate__form" id="gateForm" novalidate>
+      <div class="field">
+        <label class="field__label" for="gatePass">Password</label>
+        <div class="field__row">
+          <input
+            class="field__input"
+            id="gatePass"
+            name="passphrase"
+            type="password"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            enterkeyhint="go"
+            aria-describedby="gateHint"
+            required>
+          <button class="field__reveal" type="button" id="gateReveal" aria-pressed="false" aria-label="Show passphrase">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path class="eye-open" d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle class="eye-open" cx="12" cy="12" r="3.2"/><path class="eye-shut" d="M4 4l16 16"/></svg>
+          </button>
+          <button class="field__submit" type="submit" id="gateSubmit">
+            <span>Enter</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <p class="field__hint" id="gateHint" role="status" aria-live="polite">
+          <span data-gate-idle>clue: first gift ko sa kanya HAHA.</span>
+        </p>
+      </div>
+    </form>
+  </div>
+
+  <p class="gate__foot">
+    <span class="gate__dot" aria-hidden="true"></span>
+    ... &middot; ... &middot; ...
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     2. APP — everything behind the gate
+     ══════════════════════════════════════════════════════════ -->
+<div class="app" id="app" hidden>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#/" data-link aria-label="qs-story, back to the library">
+        <span class="brand__mark" aria-hidden="true">qs</span>
+        <span class="brand__name">qs<span class="brand__dash">&mdash;</span>story</span>
+      </a>
+
+      <p class="topbar__now" id="topbarNow" aria-hidden="true"></p>
+
+      <div class="topbar__actions">
+        <button class="iconbtn" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Theme">
+          <svg class="icon-theme" viewBox="0 0 24 24" aria-hidden="true">
+            <circle class="sun-core" cx="12" cy="12" r="5"/>
+            <g class="sun-rays">
+              <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/>
+            </g>
+            <path class="moon" d="M20 13.2A8.2 8.2 0 1 1 10.8 4a6.6 6.6 0 0 0 9.2 9.2Z"/>
+          </svg>
+        </button>
+
+        <button class="iconbtn" id="lockBtn" type="button" aria-label="Lock" title="Lock">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.4"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="topbar__progress" id="readProgress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden>
+      <span class="topbar__progressbar" id="readProgressBar"></span>
+    </div>
+  </header>
+
+  <main class="view" id="view" tabindex="-1"></main>
+
+  <footer class="foot">
+    <p class="foot__left">qs<span class="brand__dash">&mdash;</span>story</p>
+    <p class="foot__right">Written slowly. Read however you like.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     3. LIGHTBOX — full-screen photo viewer
+     ══════════════════════════════════════════════════════════ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Close photo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <figure class="lightbox__figure">
+    <img class="lightbox__img" id="lightboxImg" alt="">
+    <figcaption class="lightbox__cap" id="lightboxCap"></figcaption>
+  </figure>
+</div>
+
+<!-- Load order matters: config → helpers → features → bootstrap -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/gate.js"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/library.js"></script>
+<script src="assets/js/reader.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
