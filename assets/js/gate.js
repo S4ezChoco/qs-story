@@ -21,10 +21,10 @@
   var nodes = {};
 
   var WRONG = [
-    "That is not it. Try again.",
-    "Still no.",
-    "It is one word, all lowercase.",
-    "Ask me for it instead."
+    "MALII",
+    "Wrong",
+    "lower case lahat walang space.",
+    "Tanong nyo nalang sakin HAHAHA"
   ];
 
   function isUnlocked() {
