@@ -58,12 +58,7 @@
     photo:
       '<rect x="3.2" y="4.8" width="17.6" height="14.4" rx="2.2"/><circle cx="8.6" cy="10" r="1.6"/><path d="M4 17.2l4.9-4.3 4.2 3.6 2.6-2.3 4.3 3.8"/>',
     zoom:
-      '<circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8 21 21M11 8.6v4.8M8.6 11h4.8"/>',
-    clock: '<circle cx="12" cy="12" r="8.2"/><path d="M12 7.6V12l3 2"/>',
-    warn: '<path d="M12 4.5 21 19.5H3ZM12 10v4M12 16.6v.1"/>',
-    x: '<path d="M6 6l12 12M18 6 6 18"/>',
-    book:
-      '<path d="M4 5.2h6a3 3 0 0 1 3 3v10.6a2.4 2.4 0 0 0-2.4-2.4H4zM20 5.2h-6a3 3 0 0 0-3 3v10.6a2.4 2.4 0 0 1 2.4-2.4H20z"/>'
+      '<circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8 21 21M11 8.6v4.8M8.6 11h4.8"/>'
   };
 
   util.icon = function (name, cls) {
@@ -154,24 +149,32 @@
     return m + ":" + util.pad2(s);
   };
 
-  /* "2024-03-12" → "12 March 2024" */
-  util.longDate = function (iso) {
-    if (!iso) return "";
-    var parts = String(iso).split("-");
+  /* Dates on a chapter can be written three ways:
+       "2024-09-30"       → "30 September 2024"
+       "2024-08"          → "August 2024"
+       "Aug – Sep 2024"   → passed through untouched
+     The third form is there for chapters that cover a stretch of time. */
+  util.longDate = function (value) {
+    if (!value) return "";
+
+    var match = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(String(value).trim());
+    if (!match) return String(value);
+
     var date = new Date(
-      Number(parts[0]),
-      Number(parts[1] || 1) - 1,
-      Number(parts[2] || 1)
+      Number(match[1]),
+      Number(match[2]) - 1,
+      Number(match[3] || 1)
     );
-    if (isNaN(date.getTime())) return iso;
+    if (isNaN(date.getTime())) return String(value);
+
+    var format = match[3]
+      ? { day: "numeric", month: "long", year: "numeric" }
+      : { month: "long", year: "numeric" };
+
     try {
-      return date.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
+      return date.toLocaleDateString("en-GB", format);
     } catch (err) {
-      return iso;
+      return String(value);
     }
   };
 

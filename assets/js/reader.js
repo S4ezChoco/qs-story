@@ -35,6 +35,9 @@
       case "note":
         return el("aside", { class: "aside", html: node.text });
 
+      case "message":
+        return letter(node);
+
       case "break":
         return el("p", { class: "dinkus", text: "***", "aria-hidden": "true" });
 
@@ -53,6 +56,24 @@
       default:
         return null;
     }
+  }
+
+  /* A message quoted in full. Blank lines in `text` become paragraphs;
+     the words themselves are left exactly as they were sent. */
+  function letter(node) {
+    var byline = [node.from, node.via].filter(Boolean).join(" \u00b7 ");
+
+    var paragraphs = String(node.text || "")
+      .split(/\n\s*\n/)
+      .map(function (part) {
+        return el("p", { html: part.trim() });
+      });
+
+    var children = byline
+      ? [el("p", { class: "letter__head", text: byline })]
+      : [];
+
+    return el("blockquote", { class: "letter" }, children.concat(paragraphs));
   }
 
   /* — masthead ——————————————————————————————————— */

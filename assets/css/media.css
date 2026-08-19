@@ -1,0 +1,493 @@
+/* ============================================================
+   media.css — photos, audio player, video, empty slots, lightbox
+   ============================================================ */
+
+.media {
+  margin-block: var(--s6);
+}
+
+/* Media may break out of the prose column on wide screens. */
+@media (min-width: 62rem) {
+  .media--wide {
+    width: calc(var(--measure) + 8rem);
+    margin-left: -4rem;
+  }
+}
+
+figcaption,
+.media__cap {
+  margin-top: var(--s3);
+  color: var(--ink-mute);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   photos
+   ============================================================ */
+
+.figure__frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-tint);
+  cursor: zoom-in;
+}
+
+.figure__frame img {
+  width: 100%;
+  height: auto;
+  transition: transform 700ms var(--ease-out), filter var(--t-mid) var(--ease);
+}
+
+/* A single photo, not a gallery tile. Screenshots and phone photos are
+   portrait, so cap the height the same way videos are capped and let the
+   frame hold it centred. Full size is still one click away in the
+   lightbox. The child selector keeps gallery tiles out of this. */
+figure > .figure__frame {
+  display: grid;
+  place-items: center;
+}
+
+figure > .figure__frame img {
+  width: auto;
+  max-width: 100%;
+  max-height: 78svh;
+}
+
+.figure__frame:hover img {
+  transform: scale(1.02);
+}
+
+.figure__zoom {
+  position: absolute;
+  right: var(--s3);
+  bottom: var(--s3);
+  display: grid;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0.45rem;
+  place-items: center;
+  border-radius: var(--r-full);
+  background: var(--scrim);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--t-mid) var(--ease),
+    transform var(--t-mid) var(--ease-out);
+  pointer-events: none;
+}
+
+.figure__frame:hover .figure__zoom {
+  opacity: 1;
+  transform: none;
+}
+
+.gallery {
+  display: grid;
+  gap: var(--s3);
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.gallery .figure__frame {
+  aspect-ratio: 1;
+}
+
+.gallery .figure__frame img {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   audio player
+   ============================================================ */
+
+.player {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s2) var(--s4);
+  align-items: center;
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--elev);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--t-mid) var(--ease);
+}
+
+.player.is-playing {
+  border-color: var(--line-strong);
+}
+
+.player__play {
+  position: relative;
+  display: grid;
+  width: 2.9rem;
+  height: 2.9rem;
+  place-items: center;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: var(--bg);
+  transition: transform var(--t-fast) var(--ease),
+    opacity var(--t-fast) var(--ease);
+}
+
+.player__play:active {
+  transform: scale(0.94);
+}
+
+.player__play svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  stroke-width: 1.8;
+}
+
+.player__play .ico-pause,
+.player.is-playing .player__play .ico-play {
+  display: none;
+}
+
+.player.is-playing .player__play .ico-pause {
+  display: block;
+}
+
+/* soft ring while playing */
+.player.is-playing .player__play::after {
+  position: absolute;
+  inset: -5px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-full);
+  content: "";
+  animation: ring 2.4s var(--ease) infinite;
+}
+
+@keyframes ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+.player__body {
+  min-width: 0;
+}
+
+.player__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.player__label svg {
+  width: 0.8rem;
+  height: 0.8rem;
+  flex: none;
+}
+
+.player__title {
+  margin-top: 0.15rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player__row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin-top: var(--s3);
+}
+
+.player__time {
+  flex: none;
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* native range input, restyled */
+.seek {
+  flex: 1;
+  min-width: 0;
+  height: 1.1rem;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.seek::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: var(--r-full);
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--played, 0%),
+    var(--line-strong) var(--played, 0%)
+  );
+}
+
+.seek::-moz-range-track {
+  height: 3px;
+  border-radius: var(--r-full);
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--played, 0%),
+    var(--line-strong) var(--played, 0%)
+  );
+}
+
+.seek::-webkit-slider-thumb {
+  width: 11px;
+  height: 11px;
+  margin-top: -4px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.seek::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.seek:hover::-webkit-slider-thumb {
+  transform: scale(1.25);
+}
+
+/* nothing loaded yet: no handle, no grab cursor */
+.seek[disabled] {
+  cursor: default;
+}
+
+.seek[disabled]::-webkit-slider-thumb {
+  opacity: 0;
+}
+
+.seek[disabled]::-moz-range-thumb {
+  opacity: 0;
+}
+
+/* ============================================================
+   video
+   ============================================================ */
+
+.videoframe {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: #0b0b0c;
+}
+
+/* Phone clips are portrait. Without a ceiling a 9:16 video runs taller
+   than the window and pushes its own controls off screen, so cap the
+   height and let the frame letterbox it. */
+.videoframe video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 78svh;
+  background: #0b0b0c;
+}
+
+/* ============================================================
+   files that are not in assets/media yet
+   ============================================================ */
+
+/* An empty frame, waiting for a file. Reads as a slot, not a failure. */
+.slot {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--s2);
+  padding: var(--s5);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--bg-tint);
+  color: var(--ink-mute);
+  text-align: center;
+}
+
+.slot svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  opacity: 0.75;
+}
+
+.slot__name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+  color: var(--ink-soft);
+}
+
+.slot__hint {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.slot--photo {
+  aspect-ratio: 3 / 2;
+}
+
+.slot--video {
+  aspect-ratio: 16 / 9;
+}
+
+.slot--tile {
+  aspect-ratio: 1;
+  padding: var(--s3);
+}
+
+.slot--tile svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.slot--tile .slot__name {
+  font-size: 0.6rem;
+}
+
+.slot--tile .slot__hint {
+  display: none;
+}
+
+/* player with no file behind it yet: visible, clearly inert */
+.player.is-pending {
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+}
+
+.player.is-pending .player__play {
+  background: var(--line-strong);
+  color: var(--bg-tint);
+  cursor: default;
+}
+
+.player.is-pending .player__title,
+.player.is-pending .player__time {
+  color: var(--ink-mute);
+}
+
+.player__waiting {
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+}
+
+/* ============================================================
+   lightbox
+   ============================================================ */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(var(--s4), 5vw, var(--s7));
+  background: var(--scrim);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  animation: fade-in var(--t-mid) var(--ease) both;
+}
+
+.lightbox.is-out {
+  animation: fade-out var(--t-fast) var(--ease) both;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+.lightbox__figure {
+  display: flex;
+  max-width: min(100%, 62rem);
+  max-height: 100%;
+  flex-direction: column;
+  gap: var(--s3);
+  animation: zoom-in var(--t-mid) var(--ease-out) both;
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.lightbox__img {
+  min-height: 0;
+  max-height: 82svh;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  object-fit: contain;
+}
+
+.lightbox__cap {
+  color: var(--ink-mute);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: var(--s4);
+  right: var(--s4);
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0.6rem;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  background: var(--elev);
+  color: var(--ink);
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.lightbox__close:hover {
+  transform: rotate(90deg);
+}

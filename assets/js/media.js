@@ -14,17 +14,20 @@
   var lb = {};
   var lastFocus = null;
 
-  /* — shared: "file is not here yet" note ————————————— */
+  /* — the file is not in assets/media yet ————————————
+     Two shapes for the same idea. A note sits under an audio player;
+     a slot stands in for a picture or a video so the empty state looks
+     like a frame waiting to be filled instead of an error. */
 
-  function missingNote(path) {
-    return el("p", { class: "missing" }, [
-      icon("warn"),
-      el("span", {
-        html:
-          "Waiting for the file. Save it as <code>" +
-          String(path || "assets/media/...") +
-          "</code> and it will play here."
-      })
+  function fileName(path) {
+    return String(path || "").split("/").pop();
+  }
+
+  function slot(kind, path) {
+    return el("div", { class: "slot slot--" + kind }, [
+      icon(kind === "video" ? "video" : "photo"),
+      el("p", { class: "slot__name", text: fileName(path) }),
+      el("p", { class: "slot__hint", text: "not in assets/media yet" })
     ]);
   }
 
@@ -41,7 +44,7 @@
      photos
      ============================================================ */
 
-  function frame(item) {
+  function frame(item, tile) {
     var img = el("img", {
       src: item.src,
       alt: item.alt || "",
@@ -63,8 +66,8 @@
     );
 
     img.addEventListener("error", function () {
-      var note = missingNote(item.src);
-      if (button.parentNode) button.parentNode.replaceChild(note, button);
+      var stand = slot(tile ? "tile" : "photo", item.src);
+      if (button.parentNode) button.parentNode.replaceChild(stand, button);
     });
 
     return button;
@@ -72,12 +75,15 @@
 
   media.figure = function (block) {
     return wrap("figure", block, [
-      el("figure", {}, [frame(block), caption(block.caption)])
+      el("figure", {}, [frame(block, false), caption(block.caption)])
     ]);
   };
 
   media.gallery = function (block) {
-    var items = (block.items || []).map(frame);
+    var items = (block.items || []).map(function (item) {
+      return frame(item, true);
+    });
+
     return wrap("figure", block, [
       el("figure", {}, [
         el("div", { class: "gallery" }, items),
@@ -165,13 +171,24 @@
       now.textContent = "0:00";
     });
 
+    /* No file behind it yet: keep the player, swap the transport for the
+       filename it is waiting for. One box, no duplicate warning. */
     audio.addEventListener("error", function () {
+      var row = player.querySelector(".player__row");
+
       player.classList.add("is-pending");
       play.disabled = true;
-      play.setAttribute("aria-label", "Audio unavailable");
-      seek.disabled = true;
-      end.textContent = "\u2013:\u2013\u2013";
-      box.appendChild(missingNote(block.src));
+      play.setAttribute("aria-label", "Audio not available yet");
+
+      if (row) {
+        row.innerHTML = "";
+        row.appendChild(
+          el("span", {
+            class: "player__waiting",
+            text: "waiting for " + fileName(block.src)
+          })
+        );
+      }
     });
 
     play.addEventListener("click", function () {
@@ -231,13 +248,8 @@
     });
 
     video.addEventListener("error", function () {
-      shell.innerHTML = "";
-      if (block.poster) {
-        shell.appendChild(
-          el("img", { src: block.poster, alt: block.alt || "Video placeholder" })
-        );
-      }
-      box.insertBefore(missingNote(block.src), box.firstChild.nextSibling);
+      var stand = slot("video", block.src);
+      if (shell.parentNode) shell.parentNode.replaceChild(stand, shell);
     });
 
     players.push(video);

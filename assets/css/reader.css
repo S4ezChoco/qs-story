@@ -1,5 +1,6 @@
 /* ============================================================
-   reader.css — chapter view: prose, media blocks, lightbox
+   reader.css — chapter view: masthead, prose, end of chapter
+   Photos, players and the lightbox live in media.css.
    ============================================================ */
 
 .chapter {
@@ -8,7 +9,7 @@
 
 /* — masthead ——————————————————————————————— */
 .chapter__head {
-  max-width: var(--measure);
+  max-width: var(--measure-shell);
   padding-top: clamp(var(--s6), 7vw, var(--s8));
   padding-bottom: var(--s6);
 }
@@ -82,7 +83,7 @@
    ============================================================ */
 
 .prose {
-  max-width: var(--measure);
+  max-width: var(--measure-shell);
   font-family: var(--font-serif);
   font-size: var(--reading-size, 1.12rem);
   line-height: 1.78;
@@ -147,6 +148,37 @@
   text-transform: uppercase;
 }
 
+/* — a message quoted whole: her words, set in the UI face so it
+     reads as something received rather than something written ——— */
+.prose .letter {
+  margin-block: var(--s6);
+  padding: var(--s5);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--bg-tint);
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 0.94rem;
+  font-style: normal;
+  line-height: 1.72;
+}
+
+.letter__head {
+  margin-bottom: var(--s4);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.letter p + p {
+  margin-top: var(--s4);
+}
+
 /* — margin note ———————————————————————————— */
 .aside {
   padding: var(--s4) var(--s5);
@@ -169,356 +201,11 @@
 }
 
 /* ============================================================
-   media blocks — images, audio, video
-   ============================================================ */
-
-.media {
-  margin-block: var(--s6);
-}
-
-/* Media may break out of the prose column on wide screens. */
-@media (min-width: 62rem) {
-  .media--wide {
-    width: calc(var(--measure) + 8rem);
-    margin-left: -4rem;
-  }
-}
-
-.figure__frame {
-  position: relative;
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: var(--bg-tint);
-  cursor: zoom-in;
-}
-
-.figure__frame img {
-  width: 100%;
-  height: auto;
-  transition: transform 700ms var(--ease-out), filter var(--t-mid) var(--ease);
-}
-
-.figure__frame:hover img {
-  transform: scale(1.02);
-}
-
-.figure__zoom {
-  position: absolute;
-  right: var(--s3);
-  bottom: var(--s3);
-  display: grid;
-  width: 1.9rem;
-  height: 1.9rem;
-  padding: 0.45rem;
-  place-items: center;
-  border-radius: var(--r-full);
-  background: var(--scrim);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--ink);
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity var(--t-mid) var(--ease),
-    transform var(--t-mid) var(--ease-out);
-  pointer-events: none;
-}
-
-.figure__frame:hover .figure__zoom {
-  opacity: 1;
-  transform: none;
-}
-
-figcaption,
-.media__cap {
-  margin-top: var(--s3);
-  color: var(--ink-mute);
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  line-height: 1.5;
-}
-
-/* — gallery ———————————————————————————————— */
-.gallery {
-  display: grid;
-  gap: var(--s3);
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-}
-
-.gallery .figure__frame {
-  aspect-ratio: 1;
-}
-
-.gallery .figure__frame img {
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ============================================================
-   audio player
-   ============================================================ */
-
-.player {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--s2) var(--s4);
-  align-items: center;
-  padding: var(--s4);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: var(--elev);
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--t-mid) var(--ease);
-}
-
-.player.is-playing {
-  border-color: var(--line-strong);
-}
-
-.player__play {
-  position: relative;
-  display: grid;
-  width: 2.9rem;
-  height: 2.9rem;
-  place-items: center;
-  border-radius: var(--r-full);
-  background: var(--ink);
-  color: var(--bg);
-  transition: transform var(--t-fast) var(--ease),
-    opacity var(--t-fast) var(--ease);
-}
-
-.player__play:active {
-  transform: scale(0.94);
-}
-
-.player__play svg {
-  width: 1.05rem;
-  height: 1.05rem;
-  stroke-width: 1.8;
-}
-
-.player__play .ico-pause,
-.player.is-playing .player__play .ico-play {
-  display: none;
-}
-
-.player.is-playing .player__play .ico-pause {
-  display: block;
-}
-
-/* soft ring while playing */
-.player.is-playing .player__play::after {
-  position: absolute;
-  inset: -5px;
-  border: 1px solid var(--accent);
-  border-radius: var(--r-full);
-  content: "";
-  animation: ring 2.4s var(--ease) infinite;
-}
-
-@keyframes ring {
-  0% {
-    opacity: 0.6;
-    transform: scale(0.94);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.18);
-  }
-}
-
-.player__body {
-  min-width: 0;
-}
-
-.player__label {
-  display: flex;
-  align-items: center;
-  gap: var(--s2);
-  color: var(--ink-mute);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.player__label svg {
-  width: 0.8rem;
-  height: 0.8rem;
-  flex: none;
-}
-
-.player__title {
-  margin-top: 0.15rem;
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.player__row {
-  display: flex;
-  align-items: center;
-  gap: var(--s3);
-  margin-top: var(--s3);
-}
-
-.player__time {
-  flex: none;
-  color: var(--ink-mute);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-variant-numeric: tabular-nums;
-}
-
-/* native range input, restyled */
-.seek {
-  flex: 1;
-  min-width: 0;
-  height: 1.1rem;
-  margin: 0;
-  background: none;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.seek::-webkit-slider-runnable-track {
-  height: 3px;
-  border-radius: var(--r-full);
-  background: linear-gradient(
-    to right,
-    var(--accent) var(--played, 0%),
-    var(--line-strong) var(--played, 0%)
-  );
-}
-
-.seek::-moz-range-track {
-  height: 3px;
-  border-radius: var(--r-full);
-  background: linear-gradient(
-    to right,
-    var(--accent) var(--played, 0%),
-    var(--line-strong) var(--played, 0%)
-  );
-}
-
-.seek::-webkit-slider-thumb {
-  width: 11px;
-  height: 11px;
-  margin-top: -4px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--accent);
-  -webkit-appearance: none;
-  appearance: none;
-  transition: transform var(--t-fast) var(--ease);
-}
-
-.seek::-moz-range-thumb {
-  width: 11px;
-  height: 11px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.seek:hover::-webkit-slider-thumb {
-  transform: scale(1.25);
-}
-
-/* nothing loaded yet: no handle, no grab cursor */
-.seek[disabled] {
-  cursor: default;
-}
-
-.seek[disabled]::-webkit-slider-thumb {
-  opacity: 0;
-}
-
-.seek[disabled]::-moz-range-thumb {
-  opacity: 0;
-}
-
-/* ============================================================
-   video
-   ============================================================ */
-
-.videoframe {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: #0b0b0c;
-}
-
-.videoframe video {
-  display: block;
-  width: 100%;
-  height: auto;
-  background: #0b0b0c;
-}
-
-/* ============================================================
-   missing-media fallback (placeholder phase)
-   ============================================================ */
-
-.missing {
-  display: flex;
-  align-items: center;
-  gap: var(--s3);
-  padding: var(--s4);
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--r-md);
-  color: var(--ink-mute);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  line-height: 1.5;
-}
-
-.missing svg {
-  width: 1.1rem;
-  height: 1.1rem;
-  flex: none;
-}
-
-.missing code {
-  color: var(--ink-soft);
-  word-break: break-all;
-}
-
-.media .missing {
-  margin-top: var(--s3);
-}
-
-/* player with no file behind it yet: visible, clearly inert */
-.player.is-pending {
-  border-style: dashed;
-  background: transparent;
-  box-shadow: none;
-}
-
-.player.is-pending .player__play {
-  background: var(--line-strong);
-  color: var(--bg-tint);
-  cursor: default;
-}
-
-.player.is-pending .player__title,
-.player.is-pending .player__time {
-  color: var(--ink-mute);
-}
-
-/* ============================================================
    end of chapter
    ============================================================ */
 
 .chapend {
-  max-width: var(--measure);
+  max-width: var(--measure-shell);
   margin-top: var(--s8);
   padding-top: var(--s5);
   border-top: 1px solid var(--line);
@@ -587,86 +274,4 @@ figcaption,
   border-radius: var(--r-md);
   color: var(--ink-mute);
   font-size: 0.82rem;
-}
-
-/* ============================================================
-   lightbox
-   ============================================================ */
-
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(var(--s4), 5vw, var(--s7));
-  background: var(--scrim);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
-  animation: fade-in var(--t-mid) var(--ease) both;
-}
-
-.lightbox.is-out {
-  animation: fade-out var(--t-fast) var(--ease) both;
-}
-
-@keyframes fade-out {
-  to {
-    opacity: 0;
-  }
-}
-
-.lightbox__figure {
-  display: flex;
-  max-width: min(100%, 62rem);
-  max-height: 100%;
-  flex-direction: column;
-  gap: var(--s3);
-  animation: zoom-in var(--t-mid) var(--ease-out) both;
-}
-
-@keyframes zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.lightbox__img {
-  min-height: 0;
-  max-height: 82svh;
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-lg);
-  object-fit: contain;
-}
-
-.lightbox__cap {
-  color: var(--ink-mute);
-  font-size: 0.8rem;
-  text-align: center;
-}
-
-.lightbox__close {
-  position: absolute;
-  top: var(--s4);
-  right: var(--s4);
-  display: grid;
-  width: 2.4rem;
-  height: 2.4rem;
-  padding: 0.6rem;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: var(--r-full);
-  background: var(--elev);
-  color: var(--ink);
-  transition: transform var(--t-fast) var(--ease);
-}
-
-.lightbox__close:hover {
-  transform: rotate(90deg);
 }

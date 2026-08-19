@@ -40,7 +40,6 @@ QS.config = {
   keys: {
     unlock: "qs.unlocked",
     theme: "qs.theme",
-    progress: "qs.progress",
-    noteDismissed: "qs.note.dismissed"
+    progress: "qs.progress"
   }
 };

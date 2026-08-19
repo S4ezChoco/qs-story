@@ -29,8 +29,13 @@
   --r-full: 999px;
 
   /* — measure —————————————————————————————— */
-  --measure: 34rem;      /* prose column */
-  --shell: 70rem;        /* page shell   */
+  --measure: 34rem;      /* width of the text itself   */
+  --shell: 70rem;        /* width of the page shell    */
+  --gutter: clamp(1.5rem, 5vw, 3rem); /* side padding  */
+
+  /* Reading blocks are shells too, so they carry the gutter on top of
+     the measure. Without this the padding would eat into the text. */
+  --measure-shell: calc(var(--measure) + var(--gutter) * 2);
 
   /* — motion ——————————————————————————————— */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -135,6 +140,7 @@ select {
 }
 
 button {
+  padding: 0; /* UA padding leaks into photo frames otherwise */
   background: none;
   border: 0;
   cursor: pointer;

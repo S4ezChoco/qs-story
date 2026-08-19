@@ -309,69 +309,13 @@
 }
 
 /* ============================================================
-   note card (how to add your own content) — remove when done
+   inline code, used in the intro
    ============================================================ */
 
-.note-card {
-  position: relative;
-  max-width: var(--measure);
-  margin-bottom: var(--s8);
-  padding: var(--s5);
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--r-lg);
-  color: var(--ink-soft);
-  font-size: 0.86rem;
-  line-height: 1.65;
-}
-
-.note-card h2 {
-  margin-bottom: var(--s2);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.note-card code {
+.hero__intro code {
   padding: 0.08em 0.35em;
   border-radius: var(--r-sm);
   background: var(--bg-tint);
   font-family: var(--font-mono);
   font-size: 0.82em;
-}
-
-.note-card__x {
-  position: absolute;
-  top: var(--s3);
-  right: var(--s3);
-  display: grid;
-  width: 1.7rem;
-  height: 1.7rem;
-  padding: 0.45rem;
-  place-items: center;
-  border-radius: var(--r-full);
-  color: var(--ink-mute);
-}
-
-.note-card__x:hover {
-  background: var(--bg-tint);
-  color: var(--ink);
-}
-
-.note-card ul {
-  margin-top: var(--s3);
-  display: grid;
-  gap: var(--s2);
-}
-
-.note-card li {
-  padding-left: var(--s4);
-  text-indent: calc(var(--s4) * -1);
-}
-
-.note-card li::before {
-  color: var(--accent);
-  content: "— ";
 }

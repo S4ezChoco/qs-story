@@ -16,20 +16,20 @@
   function chips(stats) {
     var out = [];
 
-    if (stats.photos) {
+    function chip(name, count, one, many) {
+      if (!count) return;
       out.push(
         el("span", { class: "chip" }, [
-          icon("photo"),
-          stats.photos + (stats.photos > 1 ? " photos" : " photo")
+          icon(name),
+          count > 1 ? count + " " + many : one
         ])
       );
     }
-    if (stats.audio) {
-      out.push(el("span", { class: "chip" }, [icon("audio"), "Audio"]));
-    }
-    if (stats.video) {
-      out.push(el("span", { class: "chip" }, [icon("video"), "Video"]));
-    }
+
+    chip("photo", stats.photos, "1 photo", "photos");
+    chip("audio", stats.audio, "Audio", "audio");
+    chip("video", stats.video, "Video", "videos");
+
     return out;
   }
 
@@ -118,60 +118,6 @@
     );
   }
 
-  /* — the "how to use this" card. Delete the block below (and the
-       .note-card rules in library.css) once the real story is in. — */
-
-  function noteCard() {
-    if (util.store.get(QS.config.keys.noteDismissed, false)) return null;
-
-    var card = el("div", { class: "note-card", "data-rise": "120" }, [
-      el("h2", { text: "Placeholder build" }),
-      el("p", {
-        html:
-          "Everything you see is filler. Three files decide what shows up here:"
-      }),
-      el("ul", {}, [
-        el("li", {
-          html:
-            "<code>assets/js/data.js</code> — chapters, paragraphs, quotes, and " +
-            "which photo, audio or video sits where."
-        }),
-        el("li", {
-          html:
-            "<code>assets/media/</code> — drop your real photos, mp3s and mp4s " +
-            "in here, then point <code>src</code> at them."
-        }),
-        el("li", {
-          html:
-            "<code>assets/js/config.js</code> — the passphrase hash and reading " +
-            "settings."
-        })
-      ])
-    ]);
-
-    card.appendChild(
-      el(
-        "button",
-        {
-          class: "note-card__x",
-          type: "button",
-          "aria-label": "Dismiss this note",
-          onclick: function () {
-            util.store.set(QS.config.keys.noteDismissed, true);
-            card.style.transition = "opacity 200ms";
-            card.style.opacity = "0";
-            window.setTimeout(function () {
-              card.remove();
-            }, 220);
-          }
-        },
-        [icon("x")]
-      )
-    );
-
-    return card;
-  }
-
   /* — render ————————————————————————————————————— */
 
   library.render = function () {
@@ -214,8 +160,7 @@
 
     var index = el("section", { class: "index shell" }, [
       resumeCard(chapters),
-      noteCard(),
-      el("p", { class: "eyebrow index__head", text: "The chapters" }),
+      el("p", { class: "eyebrow index__head", text: meta.indexLabel || "Chapters" }),
       list
     ]);
 
